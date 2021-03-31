@@ -1,0 +1,232 @@
+#:kivy 2.0.0
+
+<WheelTop>:
+    size: 50, 100
+    angle: 0
+    source: 'graphics/tyre_top.png'
+    wheelColor: (1, 1, 1, 1)
+    canvas.before:
+        PushMatrix
+        Rotate:
+            axis: 0,0,1
+            angle: self.angle
+            origin: self.center
+    canvas:
+        Color:
+            rgba: self.wheelColor
+        Rectangle:
+            source: self.source
+            pos: self.pos
+            size: self.size
+
+
+    canvas.after:
+        PopMatrix
+
+<HalfShaft>
+    size: 40,10
+    canvas:
+        Color:
+            rgb: 0, 0, 0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+<Engine>
+    size: 65,80
+    source: 'graphics/engine.png'
+
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: self.source
+
+<RearDiff>
+    size: 50, 50
+    source: 'graphics/engine.png'
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: self.source
+
+<CentreDiff>
+    size: 50, 60
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<RearDiff>
+    size: 60, 50
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<PropShaft@Widget>
+    size: 10, 60
+    canvas:
+        Color:
+            rgb: 0, 0, 0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<VehiclePlan>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    engine: engine
+    wheel_front_left: wheel_front_left
+    wheel_front_right: wheel_front_right
+
+    Engine:
+        id: engine
+        pos: self.parent.x + (self.parent.width/2) - self.width/2 , self.parent.y + self.parent.height - 150
+
+    HalfShaft:
+        id: hs_front_left
+        pos: engine.x - self.width, engine.y + engine.height/2 - self.height/2
+
+    HalfShaft:
+        id: hs_front_right
+        pos: engine.x + engine.width, hs_front_left.y
+
+    CentreDiff:
+        id: centre_diff
+        pos: (engine.x + engine.width/2) - (self.width/2), self.parent.y  + self.parent.height/2 - self.height
+
+    PropShaft:
+        id: front_prop_shaft
+        pos: engine.center_x - self.width/2, engine.center_y - engine.height/2 - self.height
+
+    RearDiff:
+        id: rear_diff
+        pos: (engine.x + engine.width/2) - (self.width/2) , self.parent.y + 50
+
+    PropShaft:
+        id: rear_prop_shaft
+        pos: centre_diff.center_x - self.width/2, centre_diff.center_y - centre_diff.height/2 - self.height
+
+    HalfShaft:
+        id: hs_back_left
+        pos: rear_diff.x - self.width, rear_diff.y + rear_diff.height/2 - self.height/2
+
+    HalfShaft:
+        id: hs_back_right
+        pos: rear_diff.x + rear_diff.width, hs_back_left.y
+
+
+    WheelTop:
+        id: wheel_front_left
+        pos: hs_front_left.x - self.width, (hs_front_left.y + hs_front_left.height/2) - self.height/2
+
+    WheelTop:
+        id: wheel_front_right
+        pos: hs_front_right.x + hs_front_right.width, wheel_front_left.y
+
+    WheelTop:
+        id: wheel_back_left
+        pos: hs_back_left.x - self.width, (hs_back_left.y + hs_back_left.height/2) - self.height/2
+
+    WheelTop:
+        id: wheel_back_right
+        pos: hs_back_right.x + hs_back_right.width, wheel_back_left.y
+
+
+<ControlPanel>
+    orientation: 'vertical'
+    button_1:button_1
+    button_2:button_2
+    button_3:button_3
+    button_4:button_4
+    button_5:button_5
+    button_6:button_6
+    button_7:button_7
+
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            id: button_1
+            text: 'Turn Left'
+        Button:
+            id: button_2
+            text: 'Turn Right'
+    Button:
+        id: button_3
+        text: 'Button 1'
+    Button:
+        id: button_4
+        text: 'Button 1'
+    Button:
+        id: button_5
+        text: 'Button 1'
+    Button:
+        id: button_6
+        text: 'Button 1'
+    Button:
+        id: button_7
+        text: 'Button 1'
+
+
+<VehicleControl>
+    orientation: 'horizontal'
+
+    display: vehicle_plan
+    control_panel: vehicle_control_panel
+
+    VehiclePlan:
+        id: vehicle_plan
+
+    ControlPanel:
+        id: vehicle_control_panel
+
+
+<Launcher>
+    orientation: 'horizontal'
+    size_hint_y: 0.15
+    button_1:button_1
+    button_2:button_2
+    button_3:button_3
+    button_4:button_4
+    button_5:button_5
+    button_6:button_6
+    button_exit:button_exit
+
+    Button:
+        id: button_1
+        text: 'Turn Left'
+    Button:
+        id: button_2
+        text: 'Turn Right'
+    Button:
+        id: button_3
+        text: 'Button 1'
+    Button:
+        id: button_4
+        text: 'Button 1'
+    Button:
+        id: button_5
+        text: 'Button 1'
+    Button:
+        id: button_6
+        text: 'Button 1'
+    Button:
+        id: button_exit
+        text: 'Exit'
+
+<ControlScreen>:
+    orientation: 'vertical'
+    task: vehicle_control
+    launcher: launcher
+
+    VehicleControl:
+        id: vehicle_control
+
+    Launcher:
+        id: launcher
